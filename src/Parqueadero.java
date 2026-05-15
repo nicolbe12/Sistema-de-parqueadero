@@ -8,7 +8,6 @@ public class Parqueadero {
         int[][] parqueadero = new int[puestos][3];
 
             for(int i = 0; i < puestos; i++){
-
                 parqueadero[i][0] = i;
                 parqueadero[i][1] = 0;
             }
@@ -19,7 +18,36 @@ public class Parqueadero {
 
                 switch(opcion) {
                     case 1:
-                        //registrar la entrada
+                        int horaEntrada;
+                        boolean disponible = false;
+
+                        try {
+                            horaEntrada = Integer.parseInt(
+                                JOptionPane.showInputDialog("Ingrese la hora de entrada (0-23)"));
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null,"Debe ingresar solo numeros");
+
+                            break;
+                        }
+                        if (horaEntrada < 0 || horaEntrada > 23) {
+                            JOptionPane.showMessageDialog(null, "Hora invalida");
+                            break;
+                        }
+                        for (int i = 0; i < puestos; i++) {
+                            if (parqueadero[i][1] == 0) {
+                                parqueadero[i][1] = 1;
+                                parqueadero[i][2] = horaEntrada;
+
+                                disponible = true;
+
+                                JOptionPane.showMessageDialog(null, "Vehiculo registrado en el puesto " + i);
+
+                                break;
+                            }
+                        }
+                        if (!disponible) {
+                            JOptionPane.showMessageDialog(null, "No hay puestos disponibles");
+                        }
                     break;
 
                     case 2:
