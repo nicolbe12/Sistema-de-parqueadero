@@ -5,7 +5,8 @@ public class Parqueadero {
         
         int opcion = 0;
         int puestos = 10;
-        int[][] parqueadero = new int[puestos][3];
+        int[][] parqueadero = new int[puestos][4];
+        
 
             for(int i = 0; i < puestos; i++){
                 parqueadero[i][0] = i;
@@ -13,8 +14,8 @@ public class Parqueadero {
             }
 
             do {
-                opcion = Integer.parseInt(JOptionPane.showInputDialog("=== PARQUEADERO ===\n" + "1. Registrar entrada\n"
-                + "2. Registrar salida\n" + "3. Ver puestos\n" + "4. Salir"));
+                opcion = Integer.parseInt(JOptionPane.showInputDialog("=== PARQUEADERO ===\n" 
+                + "1. Registrar entrada\n" + "2. Registrar salida\n" + "3. Ver puestos\n" + "4. Salir"));
 
                 switch(opcion) {
                     case 1:
@@ -31,7 +32,7 @@ public class Parqueadero {
                     break;
 
                     case 4:
-                        //salir del menú
+                        JOptionPane.showMessageDialog(null, "Saliendo del sistema");
                     break;
 
                     default:
@@ -39,7 +40,7 @@ public class Parqueadero {
                 }
             } while (opcion != 4);
 
-        JOptionPane.showMessageDialog(null, "ya funciona?");
+        JOptionPane.showMessageDialog(null, "bye");
     }
 
     public static void mostrarPuestos(int[][] parqueadero, int puestos) { // case 3
@@ -55,6 +56,7 @@ public class Parqueadero {
     public static void registrarEntrada(int[][] parqueadero, int puestos) {
         int horaEntrada;
         boolean disponible = false;
+        int tipoVehiculo;
             try {
                 horaEntrada = Integer.parseInt(
                 JOptionPane.showInputDialog("Ingrese la hora de entrada (0-23)"));
@@ -66,6 +68,19 @@ public class Parqueadero {
                 JOptionPane.showMessageDialog(null, "Hora invalida");
                 return;
             }
+            
+            try {
+                tipoVehiculo = Integer.parseInt(JOptionPane.showInputDialog(
+                "Tipo de vehiculo\n1. Carro\n2. Moto"));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,"Debe ingresar solo numeros");
+                return;
+            }
+            if (tipoVehiculo < 1 || tipoVehiculo > 2) {
+                JOptionPane.showMessageDialog(null, "Tipo de vehiculo invalido");
+                return;
+            }
+
             for (int i = 0; i < puestos; i++) {
                 if (parqueadero[i][1] == 0) {
                     parqueadero[i][1] = 1;
@@ -117,9 +132,19 @@ public class Parqueadero {
                 return;
             }
             
-            total = tiempo * 2000; //Por ahora
-            JOptionPane.showMessageDialog(null,"Tiempo: " + tiempo + " horas\n" 
-                + "Total a pagar: $" + total);
+            if (parqueadero[puesto][3] == 1) {
+                total = tiempo * 3000;
+            } else {
+                total = tiempo * 2000;
+            }
+
+            String tipo;
+            if (parqueadero[puesto][3] == 1) {
+                tipo = "Carro";
+            } else { tipo = "Moto";}
+
+            JOptionPane.showMessageDialog(null, "Puesto: " + puesto + "\n" + "Tipo de vehiculo: " 
+            + tipo + "\n" + "Tiempo: " + tiempo + " horas\n" + "Total a pagar: $" + total);
             parqueadero[puesto][1] = 0; //libera el puesto
     }
 }
