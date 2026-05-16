@@ -51,8 +51,46 @@ public class Parqueadero {
                     break;
 
                     case 2:
-                        //Registrar la salida
+                        int puesto;
+                        int horaSalida;
+                        int tiempo;
+                        int total;
 
+                        try {
+                            puesto = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el puesto del vehiculo"));
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null,"Debe ingresar un numero");
+                            break;
+                        }
+                        if (puesto < 0 || puesto >= puestos) {
+                            JOptionPane.showMessageDialog(null,"Puesto invalido");
+                            break;
+                        }
+                        if (parqueadero[puesto][1] == 0) {
+                            JOptionPane.showMessageDialog(null,"El puesto esta libre");
+                            break;
+                        }
+                        try {
+                            horaSalida = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la hora de salida"));
+                        } catch (Exception e) {JOptionPane.showMessageDialog(null,"Debe ingresar solo numeros");
+                            break;
+                        }
+                        if (horaSalida < 0 || horaSalida > 23) {
+                            JOptionPane.showMessageDialog(null,"Hora invalida");
+                            break;
+                        }
+                        //Solo funciona para registros del mismo dia, porque la hora de salida no puede ser menor a la de entrada
+                        tiempo = horaSalida - parqueadero[puesto][2];
+                        if (tiempo <= 0) {
+                            JOptionPane.showMessageDialog(null, "La hora de salida no es valida");
+                            break;
+                        }
+                        total = tiempo * 2000; //Por ahora
+
+                        JOptionPane.showMessageDialog(null,"Tiempo: " + tiempo + " horas\n" 
+                        + "Total a pagar: $" + total);
+
+                        parqueadero[puesto][1] = 0; //libera el puesto
                     break;
 
                     case 3:
@@ -68,7 +106,7 @@ public class Parqueadero {
                     break;
 
                     case 4:
-                        //salir del parqueadero
+                        //salir del menú
                     break;
 
                     default:
