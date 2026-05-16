@@ -18,36 +18,7 @@ public class Parqueadero {
 
                 switch(opcion) {
                     case 1:
-                        int horaEntrada;
-                        boolean disponible = false;
-
-                        try {
-                            horaEntrada = Integer.parseInt(
-                                JOptionPane.showInputDialog("Ingrese la hora de entrada (0-23)"));
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(null,"Debe ingresar solo numeros");
-
-                            break;
-                        }
-                        if (horaEntrada < 0 || horaEntrada > 23) {
-                            JOptionPane.showMessageDialog(null, "Hora invalida");
-                            break;
-                        }
-                        for (int i = 0; i < puestos; i++) {
-                            if (parqueadero[i][1] == 0) {
-                                parqueadero[i][1] = 1;
-                                parqueadero[i][2] = horaEntrada;
-
-                                disponible = true;
-
-                                JOptionPane.showMessageDialog(null, "Vehiculo registrado en el puesto " + i);
-
-                                break;
-                            }
-                        }
-                        if (!disponible) {
-                            JOptionPane.showMessageDialog(null, "No hay puestos disponibles");
-                        }
+                        registrarEntrada(parqueadero, puestos);
                     break;
 
                     case 2:
@@ -94,15 +65,8 @@ public class Parqueadero {
                     break;
 
                     case 3:
-                        String estado = "";
-                        for (int i = 0; i < puestos; i++) {
-                            if (parqueadero[i][1] == 0) {
-                                estado += "Puesto " + i + " - Libre\n";
-                            } else {
-                                estado += "Puesto " + i + " - Ocupado\n";
-                            }
-                    }    
-                        JOptionPane.showMessageDialog(null, estado);
+                        //llama a la funcion
+                        mostrarPuestos(parqueadero, puestos);
                     break;
 
                     case 4:
@@ -117,4 +81,42 @@ public class Parqueadero {
         JOptionPane.showMessageDialog(null, "ya funciona?");
     }
 
+    public static void mostrarPuestos(int[][] parqueadero, int puestos) { // case 3
+        String estado = "";
+            for (int i = 0; i < puestos; i++) { 
+                if (parqueadero[i][1] == 0) {
+                    estado += "Puesto " + i + " - Libre\n";
+                } else { estado += "Puesto " + i + " - Ocupado\n";}
+            }  
+            JOptionPane.showMessageDialog(null, estado);
+    }
+
+    public static void registrarEntrada(int[][] parqueadero, int puestos) {
+        int horaEntrada;
+        boolean disponible = false;
+            try {
+                horaEntrada = Integer.parseInt(
+                JOptionPane.showInputDialog("Ingrese la hora de entrada (0-23)"));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,"Debe ingresar solo numeros");
+                return; 
+            }
+            if (horaEntrada < 0 || horaEntrada > 23) {
+                JOptionPane.showMessageDialog(null, "Hora invalida");
+                return;
+            }
+            for (int i = 0; i < puestos; i++) {
+                if (parqueadero[i][1] == 0) {
+                    parqueadero[i][1] = 1;
+                    parqueadero[i][2] = horaEntrada;
+
+                    disponible = true;
+                    JOptionPane.showMessageDialog(null, "Vehiculo registrado en el puesto " + i);
+                    break; //break solo funciona dentro de ciclos
+                }
+            }
+            if (!disponible) {
+                JOptionPane.showMessageDialog(null, "No hay puestos disponibles");
+            }
+    }
 }
