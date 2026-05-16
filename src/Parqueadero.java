@@ -22,46 +22,7 @@ public class Parqueadero {
                     break;
 
                     case 2:
-                        int puesto;
-                        int horaSalida;
-                        int tiempo;
-                        int total;
-
-                        try {
-                            puesto = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el puesto del vehiculo"));
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(null,"Debe ingresar un numero");
-                            break;
-                        }
-                        if (puesto < 0 || puesto >= puestos) {
-                            JOptionPane.showMessageDialog(null,"Puesto invalido");
-                            break;
-                        }
-                        if (parqueadero[puesto][1] == 0) {
-                            JOptionPane.showMessageDialog(null,"El puesto esta libre");
-                            break;
-                        }
-                        try {
-                            horaSalida = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la hora de salida"));
-                        } catch (Exception e) {JOptionPane.showMessageDialog(null,"Debe ingresar solo numeros");
-                            break;
-                        }
-                        if (horaSalida < 0 || horaSalida > 23) {
-                            JOptionPane.showMessageDialog(null,"Hora invalida");
-                            break;
-                        }
-                        //Solo funciona para registros del mismo dia, porque la hora de salida no puede ser menor a la de entrada
-                        tiempo = horaSalida - parqueadero[puesto][2];
-                        if (tiempo <= 0) {
-                            JOptionPane.showMessageDialog(null, "La hora de salida no es valida");
-                            break;
-                        }
-                        total = tiempo * 2000; //Por ahora
-
-                        JOptionPane.showMessageDialog(null,"Tiempo: " + tiempo + " horas\n" 
-                        + "Total a pagar: $" + total);
-
-                        parqueadero[puesto][1] = 0; //libera el puesto
+                        registrarSalida(parqueadero, puestos);
                     break;
 
                     case 3:
@@ -88,7 +49,7 @@ public class Parqueadero {
                     estado += "Puesto " + i + " - Libre\n";
                 } else { estado += "Puesto " + i + " - Ocupado\n";}
             }  
-            JOptionPane.showMessageDialog(null, estado);
+        JOptionPane.showMessageDialog(null, estado);
     }
 
     public static void registrarEntrada(int[][] parqueadero, int puestos) {
@@ -118,5 +79,47 @@ public class Parqueadero {
             if (!disponible) {
                 JOptionPane.showMessageDialog(null, "No hay puestos disponibles");
             }
+    }
+
+    public static void registrarSalida(int[][] parqueadero, int puestos) {
+        int puesto;
+        int horaSalida;
+        int tiempo;
+        int total;
+
+            try {
+                puesto = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el puesto del vehiculo"));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,"Debe ingresar un numero");
+                return;
+            }
+            if (puesto < 0 || puesto >= puestos) {
+                JOptionPane.showMessageDialog(null,"Puesto invalido");
+                return;
+            }
+            if (parqueadero[puesto][1] == 0) {
+                JOptionPane.showMessageDialog(null,"El puesto esta libre");
+                return;
+            }
+            try {
+                horaSalida = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la hora de salida"));
+            } catch (Exception e) {JOptionPane.showMessageDialog(null,"Debe ingresar solo numeros");
+                    return;
+                }
+            if (horaSalida < 0 || horaSalida > 23) {
+                JOptionPane.showMessageDialog(null,"Hora invalida");
+                return;
+            }
+            //Solo funciona para registros del mismo dia, porque la hora de salida no puede ser menor a la de entrada
+            tiempo = horaSalida - parqueadero[puesto][2];
+            if (tiempo <= 0) {
+                JOptionPane.showMessageDialog(null, "La hora de salida no es valida");
+                return;
+            }
+            
+            total = tiempo * 2000; //Por ahora
+            JOptionPane.showMessageDialog(null,"Tiempo: " + tiempo + " horas\n" 
+                + "Total a pagar: $" + total);
+            parqueadero[puesto][1] = 0; //libera el puesto
     }
 }
