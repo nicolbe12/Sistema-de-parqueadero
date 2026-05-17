@@ -16,9 +16,15 @@ public class Parqueadero {
             }
 
             do {
-                opcion = Integer.parseInt(JOptionPane.showInputDialog("=== PARQUEADERO ===\n" 
-                + "1. Registrar entrada\n" + "2. Registrar salida\n" + "3. Ver puestos\n" + "4. Mostrar ganancias\n"
-                + "5. Salir"));
+                try {
+                    opcion = Integer.parseInt(JOptionPane.showInputDialog("=== PARQUEADERO ===\n" 
+                    + "1. Registrar entrada\n" + "2. Registrar salida\n" + "3. Ver puestos\n" + "4. Mostrar ganancias\n"
+                    + "5. Salir"));
+                } catch (Exception e) {JOptionPane.showMessageDialog(null,
+                    "Debe ingresar solo numeros");
+                    opcion = 0;
+                    continue;
+                }
 
                 switch(opcion) {
                     case 1:
@@ -47,8 +53,6 @@ public class Parqueadero {
                         JOptionPane.showMessageDialog(null, "Opción inválida");
                 }
             } while (opcion != 5);
-
-        JOptionPane.showMessageDialog(null, "bye");
     }
 
     public static void mostrarPuestos(int[][] parqueadero, int puestos) { // case 3
@@ -96,8 +100,37 @@ public class Parqueadero {
                 "La placa debe tener 6 caracteres");
                 return;
             }
+            if (tipoVehiculo == 1) {
+                if (!Character.isLetter(placa.charAt(0)) ||
+                    !Character.isLetter(placa.charAt(1)) ||
+                    !Character.isLetter(placa.charAt(2)) ||
+                    !Character.isDigit(placa.charAt(3)) ||
+                    !Character.isDigit(placa.charAt(4)) ||
+                    !Character.isDigit(placa.charAt(5))) 
+                   {
+                    JOptionPane.showMessageDialog(null,
+                        "La placa del carro debe tener 3 letras y 3 numeros");
+                    return;
+                }
+            } else {
+                if (!Character.isLetter(placa.charAt(0)) ||
+                    !Character.isLetter(placa.charAt(1)) ||
+                    !Character.isLetter(placa.charAt(2)) ||
+                    !Character.isDigit(placa.charAt(3)) ||
+                    !Character.isDigit(placa.charAt(4)) ||
+                    !Character.isLetter(placa.charAt(5))) 
+                   {
+                    JOptionPane.showMessageDialog(null,
+                        "La placa de la moto debe tener 3 letras, 2 numeros y 1 letra"
+                    );
+                    return;
+                }
+            }
             propietario = JOptionPane.showInputDialog("Ingrese el nombre del propietario");
-
+            if (propietario.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null,"El nombre no puede estar vacio");
+                return;
+            }
             for (int i = 0; i < puestos; i++) {
                 if (parqueadero[i][1] == 0) {
                     parqueadero[i][1] = 1;
@@ -168,6 +201,8 @@ public class Parqueadero {
             + "Tipo de vehiculo: " + tipo + "\n" + "Tiempo: " + tiempo + " horas\n" 
             + "Total a pagar: $" + total);
             parqueadero[puesto][1] = 0; //libera el puesto
+            placas[puesto] = "";
+            propietarios[puesto] = "";
             ganancias += total;
             return ganancias;
     }
