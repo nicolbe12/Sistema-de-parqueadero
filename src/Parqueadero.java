@@ -5,8 +5,10 @@ public class Parqueadero {
         
         int opcion = 0;
         int puestos = 10;
+        int ganancias = 0;
         int[][] parqueadero = new int[puestos][4];
-        
+        String placas[] = new String[puestos];
+        String propietarios[] = new String[puestos];
 
             for(int i = 0; i < puestos; i++){
                 parqueadero[i][0] = i;
@@ -15,15 +17,16 @@ public class Parqueadero {
 
             do {
                 opcion = Integer.parseInt(JOptionPane.showInputDialog("=== PARQUEADERO ===\n" 
-                + "1. Registrar entrada\n" + "2. Registrar salida\n" + "3. Ver puestos\n" + "4. Salir"));
+                + "1. Registrar entrada\n" + "2. Registrar salida\n" + "3. Ver puestos\n" + "4. Mostrar ganancias\n"
+                + "5. Salir"));
 
                 switch(opcion) {
                     case 1:
-                        registrarEntrada(parqueadero, puestos);
+                        registrarEntrada(parqueadero, puestos, placas,propietarios);
                     break;
 
                     case 2:
-                        registrarSalida(parqueadero, puestos);
+                        ganancias = registrarSalida(parqueadero, puestos, placas, propietarios, ganancias);
                     break;
 
                     case 3:
@@ -32,13 +35,18 @@ public class Parqueadero {
                     break;
 
                     case 4:
-                        JOptionPane.showMessageDialog(null, "Saliendo del sistema");
+                        JOptionPane.showMessageDialog(null,"Ganancias del dia: $" 
+                        + ganancias);
+                    break;
+
+                    case 5:
+                        JOptionPane.showMessageDialog(null,"Saliendo de sistema.");
                     break;
 
                     default:
                         JOptionPane.showMessageDialog(null, "Opción inválida");
                 }
-            } while (opcion != 4);
+            } while (opcion != 5);
 
         JOptionPane.showMessageDialog(null, "bye");
     }
@@ -53,10 +61,12 @@ public class Parqueadero {
         JOptionPane.showMessageDialog(null, estado);
     }
 
-    public static void registrarEntrada(int[][] parqueadero, int puestos) {
+    public static void registrarEntrada(int[][] parqueadero,int puestos,String placas[],String propietarios[]) {
         int horaEntrada;
         boolean disponible = false;
         int tipoVehiculo;
+        String placa;
+        String propietario;
             try {
                 horaEntrada = Integer.parseInt(
                 JOptionPane.showInputDialog("Ingrese la hora de entrada (0-23)"));
@@ -81,10 +91,20 @@ public class Parqueadero {
                 return;
             }
 
+            placa = JOptionPane.showInputDialog("Ingrese la placa del vehiculo");
+            if (placa.length() != 6) {JOptionPane.showMessageDialog(null,
+                "La placa debe tener 6 caracteres");
+                return;
+            }
+            propietario = JOptionPane.showInputDialog("Ingrese el nombre del propietario");
+
             for (int i = 0; i < puestos; i++) {
                 if (parqueadero[i][1] == 0) {
                     parqueadero[i][1] = 1;
                     parqueadero[i][2] = horaEntrada;
+                    parqueadero[i][3] = tipoVehiculo;
+                    placas[i] = placa;
+                    propietarios[i] = propietario;
 
                     disponible = true;
                     JOptionPane.showMessageDialog(null, "Vehiculo registrado en el puesto " + i);
@@ -96,7 +116,7 @@ public class Parqueadero {
             }
     }
 
-    public static void registrarSalida(int[][] parqueadero, int puestos) {
+    public static int registrarSalida(int[][] parqueadero, int puestos,String placas[],String propietarios[], int ganancias) {
         int puesto;
         int horaSalida;
         int tiempo;
@@ -106,30 +126,30 @@ public class Parqueadero {
                 puesto = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el puesto del vehiculo"));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null,"Debe ingresar un numero");
-                return;
+                return ganancias;
             }
             if (puesto < 0 || puesto >= puestos) {
                 JOptionPane.showMessageDialog(null,"Puesto invalido");
-                return;
+                return ganancias;
             }
             if (parqueadero[puesto][1] == 0) {
                 JOptionPane.showMessageDialog(null,"El puesto esta libre");
-                return;
+                return ganancias;
             }
             try {
                 horaSalida = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la hora de salida"));
             } catch (Exception e) {JOptionPane.showMessageDialog(null,"Debe ingresar solo numeros");
-                    return;
+                    return ganancias;
                 }
             if (horaSalida < 0 || horaSalida > 23) {
                 JOptionPane.showMessageDialog(null,"Hora invalida");
-                return;
+                return ganancias;
             }
             //Solo funciona para registros del mismo dia, porque la hora de salida no puede ser menor a la de entrada
             tiempo = horaSalida - parqueadero[puesto][2];
             if (tiempo <= 0) {
                 JOptionPane.showMessageDialog(null, "La hora de salida no es valida");
-                return;
+                return ganancias;
             }
             
             if (parqueadero[puesto][3] == 1) {
@@ -143,8 +163,12 @@ public class Parqueadero {
                 tipo = "Carro";
             } else { tipo = "Moto";}
 
-            JOptionPane.showMessageDialog(null, "Puesto: " + puesto + "\n" + "Tipo de vehiculo: " 
-            + tipo + "\n" + "Tiempo: " + tiempo + " horas\n" + "Total a pagar: $" + total);
+            JOptionPane.showMessageDialog(null, "Puesto: " + puesto + "\n" 
+            + "Placa: " + placas[puesto] + "\n" + "Propietario: " + propietarios[puesto] + "\n"
+            + "Tipo de vehiculo: " + tipo + "\n" + "Tiempo: " + tiempo + " horas\n" 
+            + "Total a pagar: $" + total);
             parqueadero[puesto][1] = 0; //libera el puesto
+            ganancias += total;
+            return ganancias;
     }
 }
