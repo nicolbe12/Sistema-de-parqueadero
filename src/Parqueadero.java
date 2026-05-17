@@ -6,7 +6,7 @@ public class Parqueadero {
         int opcion = 0;
         int puestos = 10;
         int ganancias = 0;
-        int[][] parqueadero = new int[puestos][4];
+        int[][] parqueadero = new int[puestos][5];
         String placas[] = new String[puestos];
         String propietarios[] = new String[puestos];
 
@@ -131,11 +131,25 @@ public class Parqueadero {
                 JOptionPane.showMessageDialog(null,"El nombre no puede estar vacio");
                 return;
             }
+            
+            int lavado;
+            try {
+                lavado = Integer.parseInt(JOptionPane.showInputDialog(
+                "¿Desea servicio de lavado?\n1. Si\n2. No"));
+            } catch (Exception e) {JOptionPane.showMessageDialog(null,
+                "Debe ingresar solo numeros");
+                return;
+            }
+            if (lavado < 1 || lavado > 2){
+                JOptionPane.showMessageDialog(null,"Opcion invalida");
+                return;}
+
             for (int i = 0; i < puestos; i++) {
                 if (parqueadero[i][1] == 0) {
                     parqueadero[i][1] = 1;
                     parqueadero[i][2] = horaEntrada;
                     parqueadero[i][3] = tipoVehiculo;
+                    parqueadero[i][4] = lavado;
                     placas[i] = placa;
                     propietarios[i] = propietario;
 
@@ -189,6 +203,9 @@ public class Parqueadero {
                 total = tiempo * 3000;
             } else {
                 total = tiempo * 2000;
+            }
+            if (parqueadero[puesto][4] == 1) {
+                total += 2000;
             }
 
             String tipo;
